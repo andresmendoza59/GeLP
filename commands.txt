@@ -1,0 +1,3 @@
+gelp-project\Scripts\activate.bat
+User: admin
+password: djangoadmin123
