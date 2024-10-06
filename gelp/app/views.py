@@ -1,7 +1,9 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from rest_framework import viewsets
+from .serializer import ApplianceSerializer
+from .models import Appliance
 
 
 # Create your views here.
-def index(request):
-    return HttpResponse("Hello, world. You're at the app index.")
+class ApplianceViewSet(viewsets.ModelViewSet):
+    queryset = Appliance.objects.all()
+    serializer_class = ApplianceSerializer
