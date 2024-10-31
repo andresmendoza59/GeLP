@@ -1,0 +1,24 @@
+<!doctype html>
+{% extends 'app/base.html' %}
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>My test page</title>
+  </head>
+  <body>
+  {% block header %}
+  <h1>{{ appliance.model }}</h1>
+  <ul>
+
+    <li>{{ appliance.brand }}</li>
+    <li>{{ appliance.observations }}</li>
+    <li>{{ appliance.state }}</li>
+
+  </ul>
+  {% endblock %}
+
+  {% block content %}
+    <p> Hello</p>
+{% endblock %}
+  </body>
+</html>

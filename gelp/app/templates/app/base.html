@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  {% block head %}
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %} - GeLP</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'app/style.css' %}">
+  {% endblock %}
+</head>
+
+<body>
+  <div id="header">
+  <header class="header">
+    <a href="#" class="logo">GeLP Logo</a>
+    <nav class="navbar">
+
+      <a href="{% url 'index' %}">Home</a>
+      <a href="{% url 'appliance_list' %}">Appliances</a>
+      <a href="{% url 'appliance_add' %}">Register a new appliance</a>
+      <a href="{% url 'appliance_details' 2 %}">Search for an appliance</a>
+      <a href="../admin">Log In</a>
+
+    </nav>
+  </header>
+  </div>
+  <div id="content">{% block content %}{% endblock %}</div>
+</body>

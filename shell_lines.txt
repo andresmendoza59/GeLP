@@ -1,0 +1,6 @@
+from app.models import Appliance
+from app.views import appliance_add
+from app.views import appliance_details
+from app.views import appliance_edit
+
+appliance_edit('POST', 2, 'RS28EB799C11', 'Samsung Fridge', 'Approved')

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% extends 'app/base.html' %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Appliances</title>
+
+</head>
+<body>
+    {% block content %}
+    <br><br><br><br><br>
+    <h1 style="text-align: center">These are all the currently in-repair appliances:</h1>
+        {% if appliance_list %}
+
+        {% for appliance in appliance_list %}
+        <div class="boxed">
+            <p style="margin-left: 20px"> ID: {{ appliance.id }}</p>
+            <p style="margin-left: 20px">Brand: {{ appliance.brand }}</p>
+            <p style="margin-left: 20px">Model: {{ appliance.model }}</p>
+            <p style="margin-left: 20px">Observations: {{ appliance.observations }}</p>
+            <p style="margin-left: 20px">Registered at: {{ appliance.registration_date }}</p>
+            <p style="margin-left: 20px">Current State: {{ appliance.state }}</p>
+            <br>
+        </div>
+        {% endfor %}
+
+        {% else %}
+            <p>No appliances are available.</p>
+        {% endif %}
+    {% endblock %}
+</body>
+</html>

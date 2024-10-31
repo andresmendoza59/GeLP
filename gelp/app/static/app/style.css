@@ -1,0 +1,210 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+
+/* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Background color for the body */
+body {
+    background-color: #140005; /* Dark background */
+    color: #BBC4C2; /* Light text for readability */
+    line-height: 1.6;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Main container styling */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #140005; /* Dark background for the container */
+}
+
+/* Heading styles */
+h1, h2, h3 {
+    color: #BBC4C2; /* Light color for headings */
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #464033; /* Dark grey border */
+    padding-bottom: 10px;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #7E7C73; /* Medium grey for h2 headers */
+}
+
+/* Paragraph styles */
+p {
+    color: #BBC4C2; /* Light color for readability */
+    margin-bottom: 15px;
+}
+
+/* List styling */
+ul, ol {
+    color: #BBC4C2;
+    padding-left: 20px;
+}
+
+ul li, ol li {
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+/* Links */
+a {
+    color: #BBC4C2;
+    text-decoration: none;
+
+}
+
+a:hover {
+    color: #7E7C73; /* Medium grey on hover */
+    text-decoration: underline;
+}
+
+/* Button styles */
+button, .btn {
+    background-color: #464033; /* Dark grey for buttons */
+    color: #BBC4C2;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover, .btn:hover {
+    background-color: #7E7C73; /* Medium grey on hover */
+}
+
+/* Image styling */
+img {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #7E7C73; /* Medium grey border */
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Section styling */
+section {
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #464033; /* Dark grey background for sections */
+    border-radius: 5px;
+}
+
+/* Header and footer */
+header, footer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 100px;
+    background-color: #464033;
+    color: #BBC4C2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+
+}
+
+footer p {
+    font-size: 0.9rem;
+}
+
+/* Forms */
+input[type="text"], input[type="email"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #7E7C73; /* Medium grey border */
+    border-radius: 5px;
+    background-color: #140005; /* Dark background for inputs */
+    color: #BBC4C2;
+}
+
+input[type="submit"], button {
+    background-color: #464033;
+    color: #BBC4C2;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover, button:hover {
+    background-color: #7E7C73; /* Medium grey on hover */
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    border: 1px solid #7E7C73; /* Medium grey for table borders */
+    padding: 10px;
+    text-align: left;
+}
+
+table th {
+    background-color: #464033; /* Dark grey for table headers */
+    color: #BBC4C2;
+}
+
+table tr:nth-child(even) {
+    background-color: #140005; /* Alternating row color */
+}
+
+table tr:nth-child(odd) {
+    background-color: #464033;
+}
+
+.navbar a {
+    position: relative;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: 40px;
+}
+.navbar a::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #fff;
+    transition: .3s;
+}
+.navbar a:hover::before {
+    width: 100%;
+}
+.logo {
+    font-size: 32px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.boxed {
+  border: 1px solid white; /* adjust border style and color as needed */
+  padding: 10px; /* add padding for spacing */
+    margin-left: 10px;
+}

@@ -1,0 +1,15 @@
+<!doctype html>
+{% extends 'app/base.html' %}
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>My test page</title>
+  </head>
+  <body>
+  {% block content %}
+  <br><br><br><br>
+    <h1 style="color: #fff; text-align: center">{% block title %}Welcome to GeLP, you're at the home page!{% endblock %}</h1>
+    <img style="margin-left: 5%" src="../static/index_page.jpeg">
+  {% endblock %}
+  </body>
+</html>

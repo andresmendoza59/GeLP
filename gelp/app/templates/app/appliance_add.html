@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% extends 'app/base.html' %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a new Appliance</title>
+</head>
+<body>
+    {% block content %}
+    <br><br><br><br>
+
+    <h1 style="text-align: center">You're about to add a new appliance</h1>
+    <form style="margin: 50px" action="{% url 'save_appliance' %}" method="POST">
+        {% csrf_token %}
+        <fieldset>
+        <label for="brand" style="margin-left: 10px">Brand:</label><br>
+        <input type="text" style="margin-left: 10px; width: 1400px" id="brand" name="brand" maxlength="12" required><br><br>
+
+        <label for="model" style="margin-left: 10px">Model:</label><br>
+        <input type="text" style="margin-left: 10px; width: 1400px" id="model" name="model" maxlength="12" required><br><br>
+
+        <label for="observations" style="margin-left: 10px">Observations:</label><br>
+        <textarea id="observations" style="margin-left: 10px; width: 1400px" name="observations" rows="4" cols="50"></textarea><br><br>
+        </fieldset>
+        <br>
+        <input style="margin-left: 15px" type="submit" value="Save Appliance">
+    </form>
+    {% endblock %}
+</body>
+</html>
