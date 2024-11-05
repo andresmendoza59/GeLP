@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% extends 'app/base.html' %}
+{% load custom_filters %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,12 +15,36 @@
 
         {% for appliance in appliance_list %}
         <div class="boxed">
-            <p style="margin-left: 20px"> ID: {{ appliance.id }}</p>
+            <p style="margin-left: 20px" id="appliance_id"> ID: {{ appliance.id }}</p>
             <p style="margin-left: 20px">Brand: {{ appliance.brand }}</p>
             <p style="margin-left: 20px">Model: {{ appliance.model }}</p>
             <p style="margin-left: 20px">Observations: {{ appliance.observations }}</p>
             <p style="margin-left: 20px">Registered at: {{ appliance.registration_date }}</p>
             <p style="margin-left: 20px">Current State: {{ appliance.state }}</p>
+
+            <br>
+            {% if has_diagnostic|get_item:appliance.id %}
+            <form action="{% url 'generate_diagnostic' %}" method="POST">
+                {% csrf_token %}
+                <!-- Hidden input to pass the appliance ID -->
+                <input type="hidden" name="appliance_id" value="{{ appliance.id }}">
+                <button type="submit" id="generate">Generate Diagnostic</button>
+            </form>
+            {% else %}
+            <form action="{% url 'start_diagnostic' %}" method="POST">
+            {% csrf_token %}
+                <!-- Hidden input to pass the appliance ID -->
+                <input type="hidden" name="appliance_id" value="{{ appliance.id }}">
+                <button type="submit" id="start">Start Diagnostic</button>
+            </form>
+            {% endif %}
+            <br>
+            <form action="{% url 'appliance_delete' %}" method="POST">
+            {% csrf_token %}
+                <!-- Hidden input to pass the appliance ID -->
+                <input type="hidden" name="appliance_id" value="{{ appliance.id }}">
+                <button type="submit">Delete Appliance</button>
+            </form>
             <br>
         </div>
         {% endfor %}
