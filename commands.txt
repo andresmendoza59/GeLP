@@ -1,3 +1,15 @@
 gelp-project\Scripts\activate.bat
 User: admin
 password: djangoadmin123
+
+User: operator1
+password: Opappliances1
+
+User: operator2
+password: Opappliances2
+
+User: qmanager1
+password: QMappliances1
+
+User: qmanager2
+password: QMappliances2

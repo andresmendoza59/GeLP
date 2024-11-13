@@ -1,5 +1,7 @@
+import django
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -19,10 +21,6 @@ class Appliance(models.Model):
         return f"Model: {self.model}. Registered {self.registration_date}. State: {self.state}"
 
 
-class Operator(models.Model):
-    ...
-
-
 class Diagnostic(models.Model):
     appliance_model = models.ForeignKey(Appliance, on_delete=models.CASCADE, related_name="diagnostics",
                                         default=6)
@@ -36,9 +34,11 @@ class Diagnostic(models.Model):
         return f"{self.appliance_model} - {self.electric_power} - {self.average_temperature} - {self.average_temperature_freezer}"
 
 
-class Report(models.Model):
-    ...
+class ApplianceOperator(models.Model):
+    appliance_model = models.ForeignKey(Appliance, on_delete=models.CASCADE, related_name="appliance")
+    operator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="operator")
+    limit_date = models.DateTimeField(default=None, null=True)
+    observations = models.TextField(default=None, null=True)
 
-
-class QualityManager(models.Model):
-    ...
+    def __str__(self):
+        return f"{self.appliance_model} - {self.operator.username}"

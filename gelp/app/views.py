@@ -2,10 +2,11 @@ import random
 import io
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, HttpResponseRedirect, FileResponse
-from .models import Appliance, Diagnostic
+from .models import Appliance, Diagnostic, ApplianceOperator
 from django.template import loader
 from django.views import generic
 from reportlab.pdfgen import canvas
+from django.contrib.auth.models import User, Group
 
 
 class ListView(generic.ListView):
@@ -13,7 +14,12 @@ class ListView(generic.ListView):
     context_object_name = 'appliance_list'
 
     def get_queryset(self):
-        return Appliance.objects.all()
+        appliances = Appliance.objects.all()
+
+        for appliance in appliances:
+            appliance.has_operator = ApplianceOperator.objects.filter(appliance_model=appliance).exists()
+
+        return appliances
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -24,12 +30,34 @@ class ListView(generic.ListView):
             for appliance in context[self.context_object_name]
         }
         context['has_diagnostic'] = has_diagnostic
+
+        # Check if each appliance has an operator assigned
+        has_operator = {
+            appliance.id: ApplianceOperator.objects.filter(appliance_model=appliance).exists()
+            for appliance in context[self.context_object_name]
+        }
+        context['has_operator'] = has_operator
+
         return context
 
 
-class DetailView(generic.DetailView):
-    model = Appliance
-    template_name = 'app/appliance_detail.html'
+def operators_view(request):
+    if request.method == 'POST':
+        # Retrieve the "Operators" group
+        operators_group = Group.objects.get(name='Operators')
+
+        # Filter users belonging to the "Operators" group
+        operators = User.objects.filter(groups=operators_group)
+
+        # Pass the list of operators to the template context
+        context = {
+            'operators': operators,
+            'appliance_id': request.POST.get('appliance_id')
+        }
+
+        # Render the template with the context data
+        return render(request, 'app/assign_operator.html', context)
+    return HttpResponse("Invalid method", status=405)
 
 
 # Create your views here.
@@ -56,24 +84,6 @@ def save_appliance(request):
         appliance.save()
         return HttpResponseRedirect('../../appliance_list')
     return HttpResponse("Invalid method", status=405)
-
-
-def appliance_details(request, appliance_id: Appliance.pk):
-    appliance = get_object_or_404(Appliance, pk=appliance_id)
-    return render(request, 'appliance_details', {"appliance": appliance})
-
-
-def appliance_edit(request, appliance_id: Appliance.pk, new_appliance_code: str, new_appliance_name: str,
-                   new_appliance_state: Appliance.Status):
-
-    appliance = Appliance.objects.get(pk=appliance_id)
-    appliance.name = new_appliance_name
-    appliance.code = new_appliance_code
-    if appliance.state in Appliance.Status:
-        appliance.state = new_appliance_state
-    appliance.save()
-    # return render(request, 'appliance_edit.html', {'appliance': appliance})
-    return HttpResponse(appliance)
 
 
 def appliance_delete(request):
@@ -110,6 +120,14 @@ def start_diagnostic(request):
     return HttpResponse("Invalid method", status=405)
 
 
+def aux_generate(name: str, value: str, upper_lim: float, lower_lim: float) -> str:
+    if value < lower_lim:
+        return f"Under average {name}"
+    elif value > upper_lim:
+        return f"Over average {name}"
+    return "Working correctly"
+
+
 def generate_diagnostic(request):
     if request.method == "POST":
         appliance = Appliance.objects.get(pk=request.POST['appliance_id'])
@@ -121,14 +139,54 @@ def generate_diagnostic(request):
         average_temperature_freezer = diagnostic.average_temperature_freezer
         buffer = io.BytesIO()
         p = canvas.Canvas(buffer)
-        p.drawString(100, 20, f"Amperage: {amperage:.2f}")
-        p.drawString(100, 40, f"Voltage: {voltage:.2f}")
-        p.drawString(100, 60, f"Electric Power: {electric_power:.2f}")
-        p.drawString(100, 80, f"Temperature: {average_temperature:.2f}")
-        p.drawString(100, 100, f"Freezer Temperature {average_temperature_freezer:.2f}")
+        p.setFont("Times-Bold", 12)
+        p.drawString(200, 750, f"{appliance.brand}: {appliance.model}")
+        p.setFont("Times-Italic", 12)
+        p.drawString(250, 730, "Type: fridge")
+        p.setFont("Times-Roman", 12)
+        p.drawString(20, 690, f"Amperage: {amperage:.2f} Amps; Ideal range: 3-6 Amps; {aux_generate("amperage", 
+                                                                                                    amperage, 6, 3)}")
+        p.drawString(20, 670, f"Voltage: {voltage:.2f} Volts; Ideal range: 115-125 Volts; {aux_generate("voltage", voltage, 
+                                                                                              125, 115)}")
+        p.drawString(20, 650, f"Electric Power: {electric_power:.2f} Watts; Ideal range: 300-800 Watts; "
+                              f"{aux_generate("wattage", electric_power, 800, 300)}")
+        p.drawString(20, 630, f"Temperature: {average_temperature:.2f} Celsius; Ideal range: 3-6 Celsius; "
+                              f"{aux_generate("temperature", average_temperature, 5, 3)}")
+        p.drawString(20, 610, f"Freezer Temperature: {average_temperature_freezer:.2f} Celsius; Ideal range: 0-4 Celsius; "
+                              f"{aux_generate("freezer temperature", average_temperature_freezer, 4, 0)}")
 
         p.showPage()
         p.save()
 
         buffer.seek(0)
         return FileResponse(buffer, as_attachment=True, filename='diagnostic.pdf')
+
+
+def save_operator_appliance(request):
+    if request.method == 'POST':
+        appliance_id = request.POST.get('appliance_id')
+        operator_id = request.POST.get('operator_id')
+        limit_date = request.POST.get('limit_date')
+        observations = request.POST.get('observations')
+        appliance = Appliance.objects.get(id=appliance_id)
+        operators_group = Group.objects.get(name='Operators')
+        operators_users = User.objects.filter(groups=operators_group)
+        operator = operators_users.get(id=operator_id)
+
+        assignation = ApplianceOperator(appliance_model=appliance, operator=operator, limit_date=limit_date,
+                                        observations=observations)
+        assignation.save()
+
+        return HttpResponseRedirect("../appliance_list")
+    return HttpResponse("Invalid method", status=405)
+
+
+def change_state(request):
+    if request.method == 'POST':
+        appliance_id = request.POST.get('appliance_id')
+        new_state = request.POST.get('new_state')
+        appliance = Appliance.objects.get(id=appliance_id)
+        appliance.state = new_state
+        appliance.save()
+        return HttpResponseRedirect('appliance_list')
+    return HttpResponse("Invalid method", status=405)

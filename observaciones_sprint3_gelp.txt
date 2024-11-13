@@ -1,0 +1,5 @@
+Cancelar diagnóstico se quitó de las historias de usuario, ya que no está en los requerimientos del proyecto y su funcionalidad no agrega valor al producto.
+
+El objeto "reporte" se eliminó ya que no está en los requerimientos del proyecto y su funcionalidad no agrega valor al producto; además, su utilidad es muy afín a la que ya tienen los diagnósticos, por lo que se decidió mantener únicamente los diagnósticos.
+
+Asignar responsable debe aparecer como un botón en la sección de listado de electrodomésticos, pero esto se debe implementar en una aplicación aparte para los operarios.
